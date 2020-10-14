@@ -22,6 +22,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { useTranslation } from 'react-i18next';
 
 const drawerWidth = 240;
 
@@ -76,6 +77,12 @@ function MainPage(props) {
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const isMenuOpen = Boolean(anchorEl);
+  const { t, i18n } = useTranslation();
+
+  function handleClickTranslation(lang) {
+    i18n.changeLanguage(lang);
+    setAnchorEl(null);
+  }
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -105,8 +112,8 @@ function MainPage(props) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Español</MenuItem>
-      <MenuItem onClick={handleMenuClose}>English</MenuItem>
+      <MenuItem onClick={() => handleClickTranslation('es')}>Español</MenuItem>
+      <MenuItem onClick={() => handleClickTranslation('en')}>English</MenuItem>
     </Menu>
   );
 
@@ -117,19 +124,19 @@ function MainPage(props) {
       <List>
         <ListItem button key="drawerOption1">
           <ListItemIcon><PlaceIcon /></ListItemIcon>
-          <ListItemText primary="Lugares" />
+          <ListItemText primary={t('Lugares.1')} />
         </ListItem>
         <ListItem button key="drawerOption2">
           <ListItemIcon><EqualizerIcon /></ListItemIcon>
-          <ListItemText primary="Ponderado" />
+          <ListItemText primary={t('Ponderado.1')} />
         </ListItem>
         <ListItem button key="drawerOption3">
           <ListItemIcon><GroupIcon /></ListItemIcon>
-          <ListItemText primary="Amigos" />
+          <ListItemText primary={t('Amigos.1')} />
         </ListItem>
         <ListItem button key="drawerOption4">
           <ListItemIcon><ShuffleIcon /></ListItemIcon>
-          <ListItemText primary="Aleatorio" />
+          <ListItemText primary={t('Aleatorio.1')} />
         </ListItem>
       </List>
       <Divider />
