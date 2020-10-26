@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
@@ -19,10 +18,23 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import MenuIcon from '@material-ui/icons/Menu';
+import StarRateIcon from '@material-ui/icons/StarRate';
+import Brightness4Icon from '@material-ui/icons/Brightness4';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
+import Aleatorio from './Aleatorio';
+import Home from './Home';
+import Lugares from './Lugares';
+import Ponderado from './Ponderado';
+import Amigos from './Amigos';
+import {
+  Switch,
+  Route,
+  useRouteMatch,
+  Link
+} from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -31,13 +43,14 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
   },
   drawer: {
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('md')]: {
       width: drawerWidth,
       flexShrink: 0,
     },
   },
   appBar: {
-    [theme.breakpoints.up('sm')]: {
+    // zIndex: theme.zIndex.drawer + 1,
+    [theme.breakpoints.up('md')]: {
       width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: drawerWidth,
       flexGrow: 1,
@@ -45,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
   },
   menuButton: {
     marginRight: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('md')]: {
       display: 'none',
     },
   },
@@ -67,10 +80,29 @@ const useStyles = makeStyles((theme) => ({
       display: 'flex',
     },
   },
+  drawerLink: {
+    textDecoration: 'none',
+    color: 'inherit',
+  },
+  placeIconColor: {
+    color: 'red'
+  },
+  equalizerIconColor: {
+    color: 'blue'
+  },
+  groupIconColor: {
+    color: 'green'
+  },
+  shuffleIconColor: {
+    color: 'purple'
+  },
+  starRateIconColor: {
+    color: 'yellow'
+  },
 }));
 
 function MainPage(props) {
-  const { window } = props;
+  const { window, handleDarkMode } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   // const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -81,10 +113,11 @@ function MainPage(props) {
 
   function handleClickTranslation(lang) {
     i18n.changeLanguage(lang);
+    console.log(i18n.language);
     setAnchorEl(null);
   }
 
-  const handleProfileMenuOpen = (event) => {
+  const handleTranslateMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -117,29 +150,47 @@ function MainPage(props) {
     </Menu>
   );
 
+  let match = useRouteMatch();
+
   const drawer = (
     <div>
       <div className={classes.toolbar} />
       <Divider />
       <List>
-        <ListItem button key="drawerOption1">
-          <ListItemIcon><PlaceIcon /></ListItemIcon>
-          <ListItemText primary={t('Lugares.1')} />
-        </ListItem>
-        <ListItem button key="drawerOption2">
-          <ListItemIcon><EqualizerIcon /></ListItemIcon>
-          <ListItemText primary={t('Ponderado.1')} />
-        </ListItem>
-        <ListItem button key="drawerOption3">
-          <ListItemIcon><GroupIcon /></ListItemIcon>
-          <ListItemText primary={t('Amigos.1')} />
-        </ListItem>
-        <ListItem button key="drawerOption4">
-          <ListItemIcon><ShuffleIcon /></ListItemIcon>
-          <ListItemText primary={t('Aleatorio.1')} />
-        </ListItem>
+        <Link to={`${match.url}lugares`} className={classes.drawerLink}>
+          <ListItem button key="drawerOption1">
+            <ListItemIcon><PlaceIcon color="primary" classes={{ colorPrimary: classes.placeIconColor }}/></ListItemIcon>
+            <ListItemText primary={t('Lugares.title1')} />
+          </ListItem>
+        </Link>
+        <Link to={`${match.url}ponderado`} className={classes.drawerLink}>
+          <ListItem button key="drawerOption2">
+            <ListItemIcon><EqualizerIcon color="primary" classes={{ colorPrimary: classes.equalizerIconColor }}/></ListItemIcon>
+            <ListItemText primary={t('Ponderado.title1')} />
+          </ListItem>
+        </Link>
+        <Link to={`${match.url}amigos`} className={classes.drawerLink}>
+          <ListItem button key="drawerOption3">
+            <ListItemIcon><GroupIcon color="primary" classes={{ colorPrimary: classes.groupIconColor }}/></ListItemIcon>
+            <ListItemText primary={t('Amigos.title1')} />
+          </ListItem>
+        </Link>
+        <Link to={`${match.url}aleatorio`} className={classes.drawerLink}>
+          <ListItem button key="drawerOption4">
+            <ListItemIcon><ShuffleIcon color="primary" classes={{ colorPrimary: classes.shuffleIconColor }}/></ListItemIcon>
+            <ListItemText primary={t('Aleatorio.title1')} />
+          </ListItem>
+        </Link>
       </List>
       <Divider />
+      <List>
+        {/* <Link to={`${match.url}aleatorio`} className={classes.drawerLink}> */}
+          <ListItem button key="drawerOption5">
+            <ListItemIcon><StarRateIcon color="primary" classes={{ colorPrimary: classes.starRateIconColor }}/></ListItemIcon>
+            <ListItemText primary={t('Calificaciones.title1')} />
+          </ListItem>
+        {/* </Link> */}
+      </List>
     </div>
   );
 
@@ -148,6 +199,7 @@ function MainPage(props) {
   return (
     <div className={classes.root}>
       <CssBaseline />
+      {/* <Paper> */}
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <IconButton
@@ -165,10 +217,20 @@ function MainPage(props) {
           <div className={classes.sectionDesktop}>
             <IconButton
               // edge="end"
+              aria-label="theme"
+              // aria-controls={menuId}
+              // aria-haspopup="true"
+              onClick={handleDarkMode}
+              color="inherit"
+            >
+              <Brightness4Icon />
+            </IconButton>
+            <IconButton
+              // edge="end"
               aria-label="translation"
               aria-controls={menuId}
               aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
+              onClick={handleTranslateMenuOpen}
               color="inherit"
             >
               <TranslateIcon />
@@ -186,6 +248,7 @@ function MainPage(props) {
           </div>
         </Toolbar>
       </AppBar>
+      {/* </Paper> */}
       {renderMenu}
       <nav className={classes.drawer} aria-label="mailbox folders">
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
@@ -206,10 +269,10 @@ function MainPage(props) {
             {drawer}
           </Drawer>
         </Hidden>
-        <Hidden xsDown implementation="css">
+        <Hidden smDown implementation="css">
           <Drawer
             classes={{
-              paper: classes.drawerPaper,
+              paper: classes.drawerPaper, 
             }}
             variant="permanent"
             open
@@ -220,40 +283,27 @@ function MainPage(props) {
       </nav>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <Typography paragraph>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-          ut labore et dolore magna aliqua. Rhoncus dolor purus non enim praesent elementum
-          facilisis leo vel. Risus at ultrices mi tempus imperdiet. Semper risus in hendrerit
-          gravida rutrum quisque non tellus. Convallis convallis tellus id interdum velit laoreet id
-          donec ultrices. Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit
-          adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra nibh cras.
-          Metus vulputate eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo quis
-          imperdiet massa tincidunt. Cras tincidunt lobortis feugiat vivamus at augue. At augue eget
-          arcu dictum varius duis at consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem
-          donec massa sapien faucibus et molestie ac.
-        </Typography>
-        <Typography paragraph>
-          Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper eget nulla
-          facilisi etiam dignissim diam. Pulvinar elementum integer enim neque volutpat ac
-          tincidunt. Ornare suspendisse sed nisi lacus sed viverra tellus. Purus sit amet volutpat
-          consequat mauris. Elementum eu facilisis sed odio morbi. Euismod lacinia at quis risus sed
-          vulputate odio. Morbi tincidunt ornare massa eget egestas purus viverra accumsan in. In
-          hendrerit gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem et
-          tortor. Habitant morbi tristique senectus et. Adipiscing elit duis tristique sollicitudin
-          nibh sit. Ornare aenean euismod elementum nisi quis eleifend. Commodo viverra maecenas
-          accumsan lacus vel facilisis. Nulla posuere sollicitudin aliquam ultrices sagittis orci a.
-        </Typography>
+        {/* <div>
+          <Link to={`${match.url}aleatorio`}>Aleatorio</Link>
+        </div> */}
+        <Switch>
+          <Route path={`${match.path}lugares`} component={Lugares} />
+          <Route path={`${match.path}ponderado`} component={Ponderado} />
+          <Route path={`${match.path}amigos`} component={Amigos} />
+          <Route path={`${match.path}aleatorio`} component={Aleatorio} />
+          <Route exact path={match.path} component={Home} />
+        </Switch>
       </main>
     </div>
   );
 }
 
-MainPage.propTypes = {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
-  window: PropTypes.func,
-};
+// MainPage.propTypes = {
+//   /**
+//    * Injected by the documentation to work in an iframe.
+//    * You won't need it on your project.
+//    */
+//   window: PropTypes.func,
+// };
 
 export default MainPage;

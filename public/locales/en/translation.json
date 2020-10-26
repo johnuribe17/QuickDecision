@@ -1,14 +1,18 @@
 {
   "Lugares": {
-    "1": "Places"
+    "title1": "Places",
+    "title2": "Dare to meet..."
   },
   "Ponderado": {
-    "1": "Weighted"
+    "title1": "Weighted"
   },
   "Amigos": {
-    "1": "Friends"
+    "title1": "Friends"
   },
   "Aleatorio": {
-    "1": "Random"
+    "title1": "Random"
+  },
+  "Calificaciones": {
+    "title1": "Rate this app"
   }
 }
