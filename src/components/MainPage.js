@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
   },
   typographyStyles: {
-    flex: 1
+    flex: 1,
   },
   sectionDesktop: {
     // display: 'none',
@@ -99,16 +99,22 @@ const useStyles = makeStyles((theme) => ({
   starRateIconColor: {
     color: 'yellow'
   },
+  linkHome: {
+    textDecoration: "none",
+    color: 'inherit'
+  }
 }));
 
 function MainPage(props) {
   const { window, handleDarkMode } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorElProfile, setAnchorElProfile] = React.useState(null);
   // const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const isMenuOpen = Boolean(anchorEl);
+  const isProfileMenuOpen = Boolean(anchorElProfile);
   const { t, i18n } = useTranslation();
 
   function handleClickTranslation(lang) {
@@ -116,9 +122,17 @@ function MainPage(props) {
     console.log(i18n.language);
     setAnchorEl(null);
   }
+  // function handleClickProfile(route) {
+
+  //   setAnchorEl(null);
+  // }
 
   const handleTranslateMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
+  };
+  const handleProfileMenuOpen = (event) => {
+    setAnchorElProfile(event.currentTarget);
+    console.log(localStorage.getItem('userInfo'));
   };
 
   // const handleMobileMenuClose = () => {
@@ -129,12 +143,23 @@ function MainPage(props) {
     setAnchorEl(null);
     // handleMobileMenuClose();
   };
+  const handleProfileMenuClose = () => {
+    setAnchorElProfile(null);
+    // handleMobileMenuClose();
+  };
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  const menuId = 'primary-search-account-menu';
+  const handleLogout = () => {
+    localStorage.removeItem('userInfo');
+    setAnchorElProfile(null);
+  };
+
+  const menuId = 'primary-search-translate-menu';
+  const profileMenuId = 'primary-search-account-menu';
+
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
@@ -149,6 +174,27 @@ function MainPage(props) {
       <MenuItem onClick={() => handleClickTranslation('en')}>English</MenuItem>
     </Menu>
   );
+  const renderProfileMenu = (
+    <Menu
+      anchorEl={anchorElProfile}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      id={profileMenuId}
+      keepMounted
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={isProfileMenuOpen}
+      onClose={handleProfileMenuClose}
+    >
+      {!localStorage.getItem('userInfo') ?
+        <Link to="/ingreso" className={classes.drawerLink}>
+          <MenuItem>{t('MainPage.ingresar')}</MenuItem>
+        </Link> : 
+          <div>
+            <MenuItem>{JSON.parse(localStorage.getItem('userInfo')).user.userName}</MenuItem>
+            <MenuItem onClick={() => handleLogout()}>{t('MainPage.cerrarSesion')}</MenuItem>
+          </div>
+      }
+    </Menu>
+  );
 
   let match = useRouteMatch();
 
@@ -159,25 +205,25 @@ function MainPage(props) {
       <List>
         <Link to={`${match.url}lugares`} className={classes.drawerLink}>
           <ListItem button key="drawerOption1">
-            <ListItemIcon><PlaceIcon color="primary" classes={{ colorPrimary: classes.placeIconColor }}/></ListItemIcon>
+            <ListItemIcon><PlaceIcon color="primary" classes={{ colorPrimary: classes.placeIconColor }} /></ListItemIcon>
             <ListItemText primary={t('Lugares.title1')} />
           </ListItem>
         </Link>
-        <Link to={`${match.url}ponderado`} className={classes.drawerLink}>
-          <ListItem button key="drawerOption2">
-            <ListItemIcon><EqualizerIcon color="primary" classes={{ colorPrimary: classes.equalizerIconColor }}/></ListItemIcon>
-            <ListItemText primary={t('Ponderado.title1')} />
-          </ListItem>
-        </Link>
-        <Link to={`${match.url}amigos`} className={classes.drawerLink}>
-          <ListItem button key="drawerOption3">
-            <ListItemIcon><GroupIcon color="primary" classes={{ colorPrimary: classes.groupIconColor }}/></ListItemIcon>
-            <ListItemText primary={t('Amigos.title1')} />
-          </ListItem>
-        </Link>
+        {/* <Link to={`${match.url}ponderado`} className={classes.drawerLink}> */}
+        <ListItem button key="drawerOption2">
+          <ListItemIcon><EqualizerIcon color="primary" classes={{ colorPrimary: classes.equalizerIconColor }} /></ListItemIcon>
+          <ListItemText primary={t('Ponderado.title1')} />
+        </ListItem>
+        {/* </Link> */}
+        {/* <Link to={`${match.url}amigos`} className={classes.drawerLink}> */}
+        <ListItem button key="drawerOption3">
+          <ListItemIcon><GroupIcon color="primary" classes={{ colorPrimary: classes.groupIconColor }} /></ListItemIcon>
+          <ListItemText primary={t('Amigos.title1')} />
+        </ListItem>
+        {/* </Link> */}
         <Link to={`${match.url}aleatorio`} className={classes.drawerLink}>
           <ListItem button key="drawerOption4">
-            <ListItemIcon><ShuffleIcon color="primary" classes={{ colorPrimary: classes.shuffleIconColor }}/></ListItemIcon>
+            <ListItemIcon><ShuffleIcon color="primary" classes={{ colorPrimary: classes.shuffleIconColor }} /></ListItemIcon>
             <ListItemText primary={t('Aleatorio.title1')} />
           </ListItem>
         </Link>
@@ -185,10 +231,10 @@ function MainPage(props) {
       <Divider />
       <List>
         {/* <Link to={`${match.url}aleatorio`} className={classes.drawerLink}> */}
-          <ListItem button key="drawerOption5">
-            <ListItemIcon><StarRateIcon color="primary" classes={{ colorPrimary: classes.starRateIconColor }}/></ListItemIcon>
-            <ListItemText primary={t('Calificaciones.title1')} />
-          </ListItem>
+        <ListItem button key="drawerOption5">
+          <ListItemIcon><StarRateIcon color="primary" classes={{ colorPrimary: classes.starRateIconColor }} /></ListItemIcon>
+          <ListItemText primary={t('Calificaciones.title1')} />
+        </ListItem>
         {/* </Link> */}
       </List>
     </div>
@@ -212,7 +258,9 @@ function MainPage(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap className={classes.typographyStyles}>
-            QuickDecision
+            <Link to="/" className={classes.linkHome}>
+              QuickDecision
+          </Link>
           </Typography>
           <div className={classes.sectionDesktop}>
             <IconButton
@@ -240,7 +288,7 @@ function MainPage(props) {
               aria-label="account of current user"
               // aria-controls={menuId}
               aria-haspopup="true"
-              // onClick={handleProfileMenuOpen}
+              onClick={handleProfileMenuOpen}
               color="inherit"
             >
               <AccountCircle />
@@ -250,6 +298,7 @@ function MainPage(props) {
       </AppBar>
       {/* </Paper> */}
       {renderMenu}
+      {renderProfileMenu}
       <nav className={classes.drawer} aria-label="mailbox folders">
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Hidden smUp implementation="css">
@@ -272,7 +321,7 @@ function MainPage(props) {
         <Hidden smDown implementation="css">
           <Drawer
             classes={{
-              paper: classes.drawerPaper, 
+              paper: classes.drawerPaper,
             }}
             variant="permanent"
             open

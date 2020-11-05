@@ -1,7 +1,16 @@
 {
   "Lugares": {
     "title1": "Lugares",
-    "title2": "Atrévete a conocer..."
+    "title2": "Atrévete a conocer...",
+    "selecciona": "Selecciona una categoría o palabra clave para obtener de forma aleatoria tu recomendación desde FOURSQUARE City Guide",
+    "categoria": "Categoría",
+    "keyword": "Palabra clave",
+    "radio": "Radio en km",
+    "escoger": "Escoger entre los primeros",
+    "resultados": "resultados",
+    "sinCategoria": "Sin selección",
+    "buscar": "Buscar",
+    "visitar": "Visitar perfil en FOURSQUARE"
   },
   "Ponderado": {
     "title1": "Ponderado"
@@ -10,9 +19,36 @@
     "title1": "Amigos"
   },
   "Aleatorio": {
-    "title1": "Aleatorio"
+    "title1": "Aleatorio",
+    "title2": "Deja que la suerte decida",
+    "ingresa":"Ingresa las opciones y la aplicación escogerá por ti",
+    "nueva":"Nueva opción",
+    "agregar":"Agregar",
+    "seleccionar":"Seleccionar",
+    "felicitaciones":"Felicitaciones!",
+    "opcion":"La opción seleccionada es",
+    "reiniciar":"Reiniciar"
   },
   "Calificaciones": {
     "title1": "Califica esta app"
+  },
+  "Registro": {
+    "registro": "Registro",
+    "nombre": "Nombre de Usuario",
+    "correo": "Correo",
+    "contrasena": "Contraseña",
+    "registrarse": "Registrarse",
+    "ingresar": "Ingresar"
+  },
+  "Ingreso": {
+    "ingreso": "Ingreso",
+    "correo": "Correo",
+    "contrasena": "Contraseña",
+    "ingresar": "Ingresar",
+    "registrarse": "Registrarse"
+  },
+  "MainPage": {
+    "ingresar": "Ingresar",
+    "cerrarSesion": "Cerrar Sesión"
   }
 }

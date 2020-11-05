@@ -8,27 +8,44 @@ import { useForm, Controller } from "react-hook-form";
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import FormControl from '@material-ui/core/FormControl';
-import Slider from '@material-ui/core/Slider';
-import PlaceIcon from '@material-ui/icons/Place';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
 import Box from '@material-ui/core/Box';
+import Card from '@material-ui/core/Card';
+import CardMedia from '@material-ui/core/CardMedia';
+import CardContent from '@material-ui/core/CardContent';
+import Link from '@material-ui/core/Link';
 
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   // formControl: {
   //   margin: theme.spacing(0),
-    // minWidth: 120,
-    // alignItems: "center"
+  // minWidth: 120,
+  // alignItems: "center"
   // },
-    categoryStyle: {
-      marginLeft: "10px",
-    },
-    selCategoryStyle: {
-      minWidth: "100%"
-    }
+  categoryStyle: {
+    marginLeft: "20px",
+  },
+  selCategoryStyle: {
+    minWidth: "100%"
+  },
+  buttonStyle: {
+    borderRadius: "20px"
+  },
+  cardVenue: {
+    marginTop: "20px",
+    borderRadius: "16px"
+  },
+  image: {
+    maxWidth: "320px",
+    maxHeight: "320px"
+  },
+  cardDescription: {
+    flexGrow: 1,
+    height: "auto"
+  },
+  text: {
+    maxWidth: "fill-available"
+  }
 }));
 
 const sections = [
@@ -49,17 +66,21 @@ function Lugares() {
     radius: "10",
     section: ""
   };
-  const { register, handleSubmit, errors, control } = useForm({
+  const { register, handleSubmit, control } = useForm({
     defaultValues: preloadedValues
   });
   const [latlong, setLatlong] = useState("");
-  const [venues, setVenues] = useState([]);
-  const [searchInput, setSearchInput] = useState("");
+  // const [venues, setVenues] = useState([]);
+  const [venueSelected, setVenueSelected] = useState([]);
   const { t, i18n } = useTranslation();
 
   useEffect(() => {
     getLocation();
+    // }, [venueSelected]);
   }, []);
+
+  // useEffect(() => {
+  // }, [venueSelected]);
 
   const getLocation = () => {
     navigator.geolocation.getCurrentPosition(response => {
@@ -67,12 +88,12 @@ function Lugares() {
     });
   }
 
-  const getVenues = (data) => {
+  const getVenues = async (data) => {
     // e.preventDefault();
     console.log(data);
 
-    const endPoint = "https://api.foursquare.com/v2/venues/explore?";
-    const params = {
+    const endPoint1 = "https://api.foursquare.com/v2/venues/explore?";
+    const params1 = {
       client_id: process.env.REACT_APP_CLIENT_ID,
       client_secret: process.env.REACT_APP_CLIENT_SECRET,
       ll: latlong,
@@ -82,22 +103,31 @@ function Lugares() {
       radius: parseInt(data.radius) * 1000,
       v: "20201022"
     };
-    axios.get(endPoint + new URLSearchParams(params))
-      .then(response => {
-        setVenues(response.data.response.groups[0].items);
-        console.log(response);
-      })
-      .catch((err) => console.log(err));
+    const res1 = await axios.get(endPoint1 + new URLSearchParams(params1))
+    // .then(response => {
+    // setVenues(response.data.response.groups[0].items);
+    // setVenues(res1.data.response.groups[0].items);
+    // console.log(res1);
+    // })
+    // .catch((err) => console.log(err));
+    const random = Math.random();
+    const index = Math.floor(res1.data.response.groups[0].items.length * random);
+    console.log(random);
+    console.log(index);
+    const venueId = res1.data.response.groups[0].items[index].venue.id;
+    console.log(venueId);
+
+    const endPoint2 = `https://api.foursquare.com/v2/venues/${venueId}?`;
+    const params2 = {
+      client_id: process.env.REACT_APP_CLIENT_ID,
+      client_secret: process.env.REACT_APP_CLIENT_SECRET,
+      v: "20201022"
+    };
+    const res2 = await axios.get(endPoint2 + new URLSearchParams(params2))
+    //   // .then(response => {
+    setVenueSelected(res2.data.response.venue);
+    console.log(res2.data.response.venue);
   }
-
-  // const changeHandler = (event) => {
-  //   setSearchInput(event.target.value);
-  // }
-
-  // const onSubmit = (data) => {
-  //   console.log(data);
-  // setSearchInput(data.queryWord);
-  // };
 
   return (
     <div>
@@ -126,8 +156,8 @@ function Lugares() {
           </Grid>
           <Grid item xs={12}>
             <Typography variant="subtitle1" align="center">
-              Selecciona una categoría o palabra clave para obtener de forma aleatoria tu recomendación
-          </Typography>
+              {t('Lugares.selecciona')}
+            </Typography>
           </Grid>
           <Grid
             item
@@ -140,21 +170,21 @@ function Lugares() {
               <Grid item xs={12}>
                 <Box display="flex" alignItems="center">
                   <Box >
-                    <Typography variant="body1" color="textSecondary">Categoría</Typography>
+                    <Typography variant="body1" color="textSecondary">{t('Lugares.categoria')}</Typography>
                   </Box>
                   <Box flexGrow={1} className={classes.categoryStyle} >
                     <Controller
                       as={
-                          <Select 
+                        <Select
                           className={classes.selCategoryStyle}
-                          // autoWidth
-                          // label="categoría"
-                          // labelId="demo-simple-select-label"
-                          // id="demo-simple-select"
-                          // value={}
-                          // onChange={handleChange}
-                          >
-                            {i18n.language === "es" ?
+                        // autoWidth
+                        // label="categoría"
+                        // labelId="demo-simple-select-label"
+                        // id="demo-simple-select"
+                        // value={}
+                        // onChange={handleChange}
+                        >
+                          {i18n.language === "es" ?
                             sections.map((sect) => (
                               <MenuItem key={sect.id} value={sect.ingles}>
                                 {sect.spanish}
@@ -165,7 +195,8 @@ function Lugares() {
                                 {sect.ingles}
                               </MenuItem>
                             ))}
-                          </Select>
+                          <MenuItem key="vacio" value="">{t('Lugares.sinCategoria')}</MenuItem>
+                        </Select>
                       }
                       name="section"
                       control={control}
@@ -177,7 +208,7 @@ function Lugares() {
             <Grid item xs={12} md={4}>
               <Box display="flex" alignItems="flex-end">
                 <TextField
-                  placeholder="Palabra clave"
+                  placeholder={t('Lugares.keyword')}
                   fullWidth
                   name="queryWord"
                   inputRef={register}
@@ -195,7 +226,7 @@ function Lugares() {
             >
               <Box display="flex" alignItems="center">
                 <Box>
-                  <Typography variant="body1" color="textSecondary">Radio en km</Typography>
+                  <Typography variant="body1" color="textSecondary">{t('Lugares.radio')}</Typography>
                 </Box>
                 <Box m={1}>
                   <Controller
@@ -223,7 +254,9 @@ function Lugares() {
           </Grid>
           <Grid item xs={12} container spacing={2} alignItems="center">
             <Grid item>
-              <Typography variant="body1" color="textSecondary">Escoger entre los primeros</Typography>
+              <Typography variant="body1" color="textSecondary">
+                {t('Lugares.escoger')}
+              </Typography>
             </Grid>
             <Grid item>
               <Controller
@@ -247,7 +280,9 @@ function Lugares() {
               />
             </Grid>
             <Grid item>
-              <Typography color="textSecondary" variant="body1">resultados</Typography>
+              <Typography color="textSecondary" variant="body1">
+                {t('Lugares.resultados')}
+              </Typography>
             </Grid>
           </Grid>
           <Grid item xs={12}>
@@ -255,20 +290,79 @@ function Lugares() {
               type="submit"
               variant="outlined"
               color="primary"
+              className={classes.buttonStyle}
             >
-              Buscar
-          </Button>
+              {t('Lugares.buscar')}
+            </Button>
           </Grid>
         </Grid>
       </form>
 
-      <ul>
+      { venueSelected.name &&
+        <Card className={classes.cardVenue}>
+          <Grid container >
+            {venueSelected.bestPhoto &&
+              <Grid item xs={12} md={6} className={classes.image}>
+                <CardMedia
+                  component="img"
+                  className={classes.image}
+                  // alt="Contemplative Reptile"
+                  // height="140"
+                  image={`${venueSelected.bestPhoto.prefix}original${venueSelected.bestPhoto.suffix}`}
+                // title="Contemplative Reptile"
+                />
+              </Grid>
+            }
+            {/* <Grid item xs={12} md={6} className={classes.cardDescription}> */}
+            <Grid item className={classes.cardDescription}>
+              <CardContent className={classes.cardDescription}>
+                <Grid container direction="column" justify="space-between">
+                  <Grid item>
+                    <Typography color="primary" className={classes.text} gutterBottom variant="h5" align="center">
+                      {venueSelected.name}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography align="center" variant="body2" color="textSecondary">
+                      {venueSelected.categories[0].name}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography align="center" variant="body2" color="textSecondary">
+                      {venueSelected.location.city}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography align="center" className={classes.text} variant="body2" color="textSecondary">
+                      {venueSelected.location.address}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography align="center" variant="body2" color="textSecondary">
+                      {venueSelected.rating}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography align="center">
+                      <Link href={venueSelected.canonicalUrl} color="inherit" target="_blank" rel="noopener noreferrer">
+                        {t('Lugares.visitar')}
+                      </Link>
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Grid>
+          </Grid>
+        </Card>
+      }
+
+      {/* <ul>
         {venues.map(venue => {
           return (
             <li key={venue.venue.name}>{venue.venue.name} Location: {venue.venue.location.address}</li>
           )
         })}
-      </ul>
+      </ul> */}
     </div>
   );
 }

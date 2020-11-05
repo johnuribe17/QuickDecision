@@ -1,7 +1,16 @@
 {
   "Lugares": {
     "title1": "Places",
-    "title2": "Dare to meet..."
+    "title2": "Dare to meet...",
+    "selecciona": "Select a category or keyword to randomly get your recommendation from FOURSQUARE City Guide",
+    "categoria": "Category",
+    "keyword": "Keyword",
+    "radio": "Radius en km",
+    "escoger": "Choose among the first",
+    "resultados": "results",
+    "sinCategoria": "No selection",
+    "buscar": "Search",
+    "visitar": "Visit profile on FOURSQUARE"
   },
   "Ponderado": {
     "title1": "Weighted"
@@ -10,9 +19,36 @@
     "title1": "Friends"
   },
   "Aleatorio": {
-    "title1": "Random"
+    "title1": "Random",
+    "title2": "Let luck decide",
+    "ingresa":"Enter the options and the application will choose for you",
+    "nueva":"New option",
+    "agregar":"Add",
+    "seleccionar":"Select",
+    "felicitaciones":"Congratulations!",
+    "opcion":"The selected option is",
+    "reiniciar":"Restart"
   },
   "Calificaciones": {
     "title1": "Rate this app"
+  },
+  "Registro": {
+    "registro": "Sign up",
+    "nombre": "Username",
+    "correo": "Email",
+    "contrasena": "Password",
+    "registrarse": "Sign up",
+    "ingresar": "Login"
+  },
+  "Ingreso": {
+    "ingreso": "Ingreso",
+    "correo": "Correo",
+    "contrasena": "Contraseña",
+    "ingresar": "Ingresar",
+    "registrarse": "Registrarse"
+  },
+  "MainPage": {
+    "ingresar": "Login",
+    "cerrarSesion": "Logout"
   }
 }
